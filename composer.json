@@ -1,0 +1,15 @@
+{
+  "name": "augustash/wp-valet",
+  "description": "Extends the WordPress core command palette with a Shift+Space hotkey, front-end support and site-specific commands, mirroring the Drupal Valet module.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "homepage": "https://github.com/augustash/wp-valet",
+  "support": {
+    "issues": "https://github.com/augustash/wp-valet/issues",
+    "source": "https://github.com/augustash/wp-valet"
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.4"
+  }
+}
