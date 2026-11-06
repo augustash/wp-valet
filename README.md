@@ -4,7 +4,7 @@ The WordPress counterpart to the [Valet](https://github.com/jacerider/valet) Dru
 
 ## What it adds
 
-- **Shift+Space** opens the palette anywhere outside a text field. Core's Cmd/Ctrl+K still works.
+- **Shift+Space** opens the palette anywhere outside a text field. Core's Cmd/Ctrl+K still works, but the admin bar button shows ⇧Space everywhere for consistency.
 - **Front-end palette** for logged-in users with `edit_posts`. It offers the admin menu (saved from the user's last wp-admin visit), a content search across all post types, and an admin bar button.
 - **Site commands:**
   - "Edit this page" or "Edit term" on the front end.
@@ -26,6 +26,7 @@ add_filter( 'wp_valet_commands', function ( array $commands, string $context ) {
 		'label'    => 'Theme Settings',
 		'url'      => admin_url( 'admin.php?page=theme-general-settings' ),
 		'category' => 'view', // command|view|edit|action
+		'icon'     => 'page', // optional: pencil|page|post (edit defaults to pencil)
 	];
 	return $commands;
 }, 10, 2 );

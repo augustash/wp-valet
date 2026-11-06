@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Valet
  * Description: Extends the core command palette with a Shift+Space hotkey, front-end support and site-specific commands, mirroring the Valet module used on our Drupal sites.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Text Domain: wp-valet
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WP_VALET_VERSION', '1.0.0' );
+define( 'WP_VALET_VERSION', '1.0.1' );
 define( 'WP_VALET_FILE', __FILE__ );
 define( 'WP_VALET_DIR', plugin_dir_path( __FILE__ ) );
 

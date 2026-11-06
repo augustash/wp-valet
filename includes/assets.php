@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'admin_enqueue_scripts', 'wp_valet_enqueue_admin', 20 );
 add_action( 'wp_enqueue_scripts', 'wp_valet_enqueue_front' );
-add_action( 'admin_bar_menu', 'wp_valet_admin_bar_button', 55 );
+add_action( 'admin_bar_menu', 'wp_valet_admin_bar_button', 56 );
 
 function wp_valet_enqueue_admin(): void {
 	if ( ! wp_valet_user_can() || ! wp_script_is( 'wp-core-commands', 'enqueued' ) ) {
@@ -51,7 +51,7 @@ function wp_valet_enqueue( array $settings ): void {
 	wp_enqueue_script(
 		'wp-valet',
 		plugins_url( $path, WP_VALET_FILE ),
-		[ 'wp-api-fetch', 'wp-commands', 'wp-data', 'wp-element', 'wp-html-entities', 'wp-i18n', 'wp-url' ],
+		[ 'wp-api-fetch', 'wp-commands', 'wp-data', 'wp-element', 'wp-html-entities', 'wp-i18n', 'wp-primitives', 'wp-url' ],
 		WP_VALET_VERSION . '.' . filemtime( WP_VALET_DIR . $path ),
 		true
 	);
@@ -64,12 +64,22 @@ function wp_valet_enqueue( array $settings ): void {
 }
 
 /**
- * Core only adds its palette button inside wp-admin; add the same node on
- * the front end so core's admin bar styles apply.
+ * Shows Valet's Shift+Space shortcut on the palette button everywhere.
+ *
+ * In wp-admin this replaces core's ⌘K/Ctrl+K node (Cmd/Ctrl+K still works);
+ * on the front end, where core adds no button, it adds one. Reusing core's
+ * node ID keeps core's admin bar styles.
  */
 function wp_valet_admin_bar_button( WP_Admin_Bar $wp_admin_bar ): void {
-	if ( is_admin() || ! wp_valet_user_can() ) {
+	if ( ! wp_valet_user_can() ) {
 		return;
+	}
+
+	if ( is_admin() ) {
+		if ( ! $wp_admin_bar->get_node( 'command-palette' ) ) {
+			return;
+		}
+		$wp_admin_bar->remove_node( 'command-palette' );
 	}
 
 	$wp_admin_bar->add_node(
@@ -77,7 +87,7 @@ function wp_valet_admin_bar_button( WP_Admin_Bar $wp_admin_bar ): void {
 			'id'    => 'command-palette',
 			'title' => sprintf(
 				'<span class="ab-icon" aria-hidden="true"></span><span class="ab-label"><kbd>%s</kbd><span class="screen-reader-text"> %s</span></span>',
-				esc_html_x( '⇧Space', 'keyboard shortcut to open the command palette', 'wp-valet' ),
+				esc_html( wp_valet_shortcut_label() ),
 				esc_html__( 'Open command palette', 'wp-valet' )
 			),
 			'href'  => '#',
@@ -87,4 +97,16 @@ function wp_valet_admin_bar_button( WP_Admin_Bar $wp_admin_bar ): void {
 			],
 		]
 	);
+}
+
+/**
+ * "⇧Space" on Apple platforms, "Shift+Space" elsewhere, mirroring how core
+ * labels ⌘K/Ctrl+K.
+ */
+function wp_valet_shortcut_label(): string {
+	$is_apple_os = (bool) preg_match( '/Macintosh|Mac OS X|Mac_PowerPC|iPhone|iPad/i', $_SERVER['HTTP_USER_AGENT'] ?? '' );
+
+	return $is_apple_os
+		? _x( '⇧Space', 'keyboard shortcut to open the command palette', 'wp-valet' )
+		: _x( 'Shift+Space', 'keyboard shortcut to open the command palette', 'wp-valet' );
 }

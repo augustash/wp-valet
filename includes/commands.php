@@ -3,7 +3,9 @@
  * Site-specific commands Valet adds on top of core's.
  *
  * Each command is an array with `name`, `label` and `url`, plus optional
- * `category` (command|view|edit|action) and `searchLabel`. Other plugins and
+ * `category` (command|view|edit|action), `icon` (pencil|page|post; edit
+ * commands default to pencil, view commands get core's arrow) and
+ * `searchLabel`. Other plugins and
  * themes can add their own through the `wp_valet_commands` filter.
  */
 
